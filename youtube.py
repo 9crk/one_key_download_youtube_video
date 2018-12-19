@@ -29,4 +29,4 @@ print('Download started. Wait... ')
 if len(sys.argv) >= 3:
     stream.download(filename=sys.argv[2])
 else:
-    stream.download(filename='output')
+    stream.download(filename=url.split('v=')[-1].split('&')[0])
