@@ -1,5 +1,24 @@
 import socket
-import youtube2
+from pytube import YouTube
+
+def exe(argv1):
+	url = argv1
+	yt = YouTube(url)
+	streamFormat = 0
+	for stream in yt.streams.all():
+	#    print(stream)
+		strMe = str(stream)
+		if( "720p" in strMe and "video/mp4" in strMe and "acodec" in strMe):
+			streamFormat = int(stream.itag)
+		else:
+			if( "360p" in strMe and "video/mp4" in strMe and "acodec" in strMe):
+				streamFormat = int(stream.itag)
+	stream = yt.streams.get_by_itag(streamFormat)
+	print('Download started. Wait... ')
+	stream.download(filename=url.split('v=')[-1].split('&')[0])
+
+
+
 host=''
 port=12345
 addr=(host,port)
@@ -22,10 +41,16 @@ while True:
 			break
 		url = data.decode()
 		print(url)
-		youtube2.exe(url)
+		exe(url)
 		#udp中是udpSerSock.sendto(msg.encode(),client_addr),tcp这里直接用客户端sock对象直接发送即可
 		tcpCliSock.send("added successfully".encode())
 		tcpCliSock.close()
 		break
 tcpSerSock.close()
+
+
+import sys
+#sys.setdefaultencoding( "utf-8" )
+
+
 
