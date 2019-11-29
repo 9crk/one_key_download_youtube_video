@@ -1,4 +1,5 @@
 import socket
+import os
 from pytube import YouTube
 
 def exe(argv1):
@@ -15,7 +16,8 @@ def exe(argv1):
 				streamFormat = int(stream.itag)
 	stream = yt.streams.get_by_itag(streamFormat)
 	print('Download started. Wait... ')
-	stream.download(filename="/var/www/html/v/".url.split('v=')[-1].split('&')[0])
+	stream.download(filename="tmp")        
+	os.system("mv tmp.* /var/www/html/v/"+url.split('v=')[-1].split('&')[0])
 
 
 
@@ -35,17 +37,26 @@ while True:
 #udp中是recvfrom(buffersize),tcp这里用accept()；tcp这里接收到的是客户端的sock对象，后面接受数据时使用socket.recv()
 	tcpCliSock,client_addr=tcpSerSock.accept() #等待接受连接
 	print('连接成功，客户端地址为：',client_addr)
-	while True:
-		data=tcpCliSock.recv(2048)
-		if not data:
-			break
-		url = data.decode()
-		print(url)
-		exe(url)
-		#udp中是udpSerSock.sendto(msg.encode(),client_addr),tcp这里直接用客户端sock对象直接发送即可
-		tcpCliSock.send("added successfully".encode())
+	tcpCliSock.send("input password: ".encode())
+	data=tcpCliSock.recv(2048)
+	if not data:
 		tcpCliSock.close()
-		break
+		continue
+	if data.decode()[0:7] != "zhouhua":
+		print(data.decode())
+		tcpCliSock.close()
+		continue
+	tcpCliSock.send("Login Success,input url: ".encode())
+	data=tcpCliSock.recv(2048)
+	if not data:
+		tcpCliSock.close()
+		continue
+	url = data.decode()
+	print(url)
+	exe(url)
+	#udp中是udpSerSock.sendto(msg.encode(),client_addr),tcp这里直接用客户端sock对象直接发送即可
+	tcpCliSock.send("added successfully".encode())
+	tcpCliSock.close()
 tcpSerSock.close()
 
 
