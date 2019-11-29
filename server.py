@@ -15,7 +15,7 @@ def exe(argv1):
 				streamFormat = int(stream.itag)
 	stream = yt.streams.get_by_itag(streamFormat)
 	print('Download started. Wait... ')
-	stream.download(filename=url.split('v=')[-1].split('&')[0])
+	stream.download(filename="/var/www/html/v/".url.split('v=')[-1].split('&')[0])
 
 
 
