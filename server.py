@@ -1,12 +1,13 @@
 import socket
 import os
 from pytube import YouTube
-
+import re
 def exe(argv1):
 	if len(argv1) < 20:
 		return
 	url = argv1
 	yt = YouTube(url)
+	print(yt.title)
 	streamFormat = 0
 	for stream in yt.streams.all():
 	#    print(stream)
@@ -19,9 +20,11 @@ def exe(argv1):
 	stream = yt.streams.get_by_itag(streamFormat)
 	print('Download started. Wait... ')
 	stream.download(filename="tmp")        
-	os.system("mv tmp.* /var/www/html/v/"+url.split('v=')[-1].split('&')[0])
-
-
+	#os.system("mv tmp.* /var/www/html/v/"+url.split('v=')[-1].split('&')[0].split('\r')[0]+".mp4")
+	temp = yt.title 
+	string = re.sub("[\s+\.\!\/_,$%^*(+\"\']+|[+——！，。？、~@#￥%……&*|（）]+", "",temp)  
+	fn = "".join(string.split(" ")) + ".mp4"
+	os.system("mv tmp.* /var/www/html/v/"+fn)
 
 host=''
 port=12345
